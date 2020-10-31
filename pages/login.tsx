@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Box, Button, Container, LinearProgress, Link, Paper, TextField, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import fb from "../src/firebase-config";
@@ -29,20 +29,24 @@ const Login = () => {
 
     const classes = useStyles()
     const router = useRouter()
+    const [loading, toggleLoading] = useState(false)
 
     function signIn(event) {
         event.preventDefault()
-        fb.auth().signInWithEmailAndPassword(event.target.email.value, event.target.password.value)
+        toggleLoading(true)
+        setTimeout(() => fb.auth().signInWithEmailAndPassword(event.target.email.value, event.target.password.value)
             .then(() => router.push('/'))
             .catch(function (error) {
                 // TO DO: Handle sign in errors
                 console.log(error.message)
-            });
+                toggleLoading(false)
+            }), 1500)
+
     }
 
     const pageContent = <Container component="main" maxWidth="xs">
         <Paper variant="outlined" className={classes.container}>
-            <LinearProgress hidden/>
+            <LinearProgress hidden={!loading} />
             <Box p={4} textAlign="center" width={1}>
                 <Typography variant="h5" component="h1" className={classes.bold}>
                     Welcome back
@@ -57,7 +61,7 @@ const Login = () => {
                                variant="outlined" type="password" autoComplete="current-password"/>
                     <Box mt={6} display="flex" alignItems="center" justifyContent="space-between">
                         <Link variant="body1" className={classes.bold}>Forgot password?</Link>
-                        <Button variant="contained" type="submit" color="primary" size="large">
+                        <Button disabled={loading} variant="contained" type="submit" color="primary" size="large">
                             Log in
                         </Button>
                     </Box>

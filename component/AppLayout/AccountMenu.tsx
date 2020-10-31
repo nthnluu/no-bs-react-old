@@ -1,11 +1,21 @@
 import IconButton from "@material-ui/core/IconButton";
-import {Avatar, Button, Paper, Typography} from "@material-ui/core";
+import {
+    Avatar,
+    Button, Divider,
+    List,
+    ListItem,
+    Paper,
+    Switch,
+    Typography
+} from "@material-ui/core";
 import Popper from "@material-ui/core/Popper";
-import React, {useRef, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import fb from "../../src/firebase-config";
 import {useRouter} from "next/router";
+import {DarkModeContext} from "../../src/DarkModeContext";
+
 
 const useStyles = makeStyles((theme) => ({
     largeAvatar: {
@@ -25,9 +35,17 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 600,
         fontSize: 18
     },
+    listItem: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+    spacer: {
+        marginTop: theme.spacing(2)
+    },
     signOut: {
         marginTop: theme.spacing(4)
-    }
+    },
+
 }));
 
 const AccountMenu = () => {
@@ -35,6 +53,7 @@ const AccountMenu = () => {
     const avatarRef = useRef(null)
     const [accountMenu, toggleAccountMenu] = useState(false)
     const router = useRouter()
+    const {darkMode, setDarkMode} = useContext(DarkModeContext)
 
     function signOut() {
         fb.auth().signOut()
@@ -42,18 +61,32 @@ const AccountMenu = () => {
     }
 
     return <ClickAwayListener onClickAway={() => toggleAccountMenu(false)}>
+
         <div>
             <IconButton size="small" onClick={() => toggleAccountMenu(!accountMenu)}>
                 <Avatar ref={avatarRef}
-                        src="https://images.unsplash.com/photo-1604072366595-e75dc92d6bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"/>
+                        src="/placeholder_avatar.jpeg"/>
             </IconButton>
             <Popper id="popper" open={accountMenu} anchorEl={avatarRef.current}>
                 <Paper elevation={6} className={classes.menuBody}>
                     <Avatar className={classes.largeAvatar}
-                            src="https://images.unsplash.com/photo-1604072366595-e75dc92d6bdc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"/>
+                            src="/placeholder_avatar.jpeg"/>
                     <Typography className={classes.displayName}>Nathan Luu</Typography>
                     <Typography variant="body2">nathan_luu@brown.edu</Typography>
-
+                    <Divider className={classes.spacer}/>
+                    <List>
+                        <ListItem className={classes.listItem}>
+                            <Typography>Dark mode</Typography>
+                            <Switch
+                                color="primary"
+                                checked={darkMode}
+                                onClick={() => setDarkMode(!darkMode)}
+                                name="darkModeToggle"
+                                inputProps={{'aria-label': 'Dark mode'}}
+                            />
+                        </ListItem>
+                    </List>
+                    <Divider/>
                     <Button onClick={signOut} className={classes.signOut} variant="outlined" color="default">
                         Sign out
                     </Button>
