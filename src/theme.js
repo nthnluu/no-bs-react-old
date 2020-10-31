@@ -32,6 +32,9 @@ const theme = (darkMode = false) => createMuiTheme({
     },
     palette: {
         type: darkMode ? 'dark' : 'light',
+        text: {
+            primary: darkMode ? '#fff' : 'rgba(0,0,0,0.75)'
+        },
         primary: {
             main: darkMode ? '#3f97bc': '#259bea',
         },

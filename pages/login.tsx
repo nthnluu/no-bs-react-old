@@ -1,7 +1,9 @@
-import AppLayout from "../component/AppLayout";
 import React from "react";
 import {Box, Button, Container, LinearProgress, Link, Paper, TextField, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
+import fb from "../src/firebase-config";
+import {useRouter} from "next/router";
+import AuthSwitcher from "../component/AuthSwitcher";
 
 const useStyles = makeStyles((theme) => ({
     bold: {
@@ -25,26 +27,37 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
 
-    const classes = useStyles();
+    const classes = useStyles()
+    const router = useRouter()
 
-    return <Container component="main" maxWidth="xs">
+    function signIn(event) {
+        event.preventDefault()
+        fb.auth().signInWithEmailAndPassword(event.target.email.value, event.target.password.value)
+            .then(() => router.push('/'))
+            .catch(function (error) {
+                // TO DO: Handle sign in errors
+                console.log(error.message)
+            });
+    }
+
+    const pageContent = <Container component="main" maxWidth="xs">
         <Paper variant="outlined" className={classes.container}>
             <LinearProgress hidden/>
             <Box p={4} textAlign="center" width={1}>
                 <Typography variant="h5" component="h1" className={classes.bold}>
-                   Welcome back
+                    Welcome back
                 </Typography>
                 <Typography component="h1">
                     Log in with your Brown EP account
                 </Typography>
-                <form className={classes.form}>
-                    <TextField className={classes.input} fullWidth id="outlined-basic" label="Email"
-                               variant="outlined"/>
-                    <TextField className={classes.input} fullWidth id="outlined-basic" label="Password"
-                               variant="outlined"/>
+                <form className={classes.form} onSubmit={signIn}>
+                    <TextField required className={classes.input} fullWidth id="email" label="Email"
+                               variant="outlined" type="email" autoComplete="email"/>
+                    <TextField required className={classes.input} fullWidth id="password" label="Password"
+                               variant="outlined" type="password" autoComplete="current-password"/>
                     <Box mt={6} display="flex" alignItems="center" justifyContent="space-between">
                         <Link variant="body1" className={classes.bold}>Forgot password?</Link>
-                        <Button variant="contained" color="primary" size="large">
+                        <Button variant="contained" type="submit" color="primary" size="large">
                             Log in
                         </Button>
                     </Box>
@@ -52,6 +65,12 @@ const Login = () => {
             </Box>
         </Paper>
     </Container>
+
+    return <AuthSwitcher authenticatedView={null}
+                         anonView={pageContent}
+                         loadingView={null}
+                         authHref={'/'}/>
+
 }
 
 export default Login
