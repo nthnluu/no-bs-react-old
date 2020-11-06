@@ -15,6 +15,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import fb from "../../src/firebase-config";
 import {useRouter} from "next/router";
 import {DarkModeContext} from "../../src/DarkModeContext";
+import {AuthContext} from "../../src/AuthContext";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,25 +55,23 @@ const AccountMenu = () => {
     const [accountMenu, toggleAccountMenu] = useState(false)
     const router = useRouter()
     const {darkMode, setDarkMode} = useContext(DarkModeContext)
+    const {authState, signOut} = useContext(AuthContext)
 
-    function signOut() {
-        fb.auth().signOut()
-            .then(() => router.push('/login'))
-    }
+    const currentUser = fb.auth().currentUser
+
 
     return <ClickAwayListener onClickAway={() => toggleAccountMenu(false)}>
 
         <div>
             <IconButton size="small" onClick={() => toggleAccountMenu(!accountMenu)}>
                 <Avatar ref={avatarRef}
-                        src="/placeholder_avatar.jpeg"/>
+                        src={authState.user.profile_picture}/>
             </IconButton>
             <Popper id="popper" open={accountMenu} anchorEl={avatarRef.current}>
                 <Paper elevation={6} className={classes.menuBody}>
-                    <Avatar className={classes.largeAvatar}
-                            src="/placeholder_avatar.jpeg"/>
-                    <Typography className={classes.displayName}>Nathan Luu</Typography>
-                    <Typography variant="body2">nathan_luu@brown.edu</Typography>
+                    <Avatar className={classes.largeAvatar} src={authState.user.profile_picture}/>
+                    <Typography className={classes.displayName}>{authState.user.name}</Typography>
+                    <Typography variant="body2">{authState.user.email}</Typography>
                     <Divider className={classes.spacer}/>
                     <List>
                         <ListItem className={classes.listItem}>

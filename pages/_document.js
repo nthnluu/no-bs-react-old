@@ -12,7 +12,7 @@ export default class MyDocument extends Document {
                     <meta name="theme-color" content={theme().palette.primary.main}/>
                     <link
                         rel="stylesheet"
-                        href="https://fonts.googleapis.com/css?family=Rubik"/>
+                        href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans"/>
                 </Head>
                 <body>
                 <Main/>

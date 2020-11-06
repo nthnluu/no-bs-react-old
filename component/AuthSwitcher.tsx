@@ -20,18 +20,18 @@ const AuthSwitcher: React.FC<Props> = ({authenticatedView,
     const {authState} = useContext(AuthContext)
     const router = useRouter()
 
-    switch (authState) {
-        case("AUTHENTICATED"):
+    switch (authState.status) {
+        case("in"):
             if (authHref) {
                 router.push(authHref)
             }
             return authenticatedView
-        case("LOADING"):
+        case("loading"):
             if (loadingHref) {
                 router.push(loadingHref)
             }
             return loadingView
-        case("ANONYMOUS"):
+        case("out"):
             if (anonHref) {
                 router.push(anonHref)
             }

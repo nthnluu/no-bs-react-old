@@ -17,7 +17,7 @@ const theme = (darkMode = false) => createMuiTheme({
             fontWeight: 600
         },
         fontFamily: [
-            'Rubik',
+            'IBM Plex Sans',
             '-apple-system',
             'BlinkMacSystemFont',
             '"Segoe UI"',
